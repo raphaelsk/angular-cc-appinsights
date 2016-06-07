@@ -5,10 +5,13 @@
   "main": "dist/angular-cc-appinsights.js",
   "scripts": {
     "lite": "lite-server",
+    "tsc": "node_modules/.bin/tsc",
+    "tsc:w": "node_modules/.bin/tsc -w",
     "postinstall": "typings install",
-    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
+    "start": "npm run tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "typings": "typings"
+    "typings": "typings",
+    "uglify": "uglifyjs dist/angular-cc-appinsights.js -o dist/angular-cc-appinsights.min.js --source-map dist/angular-cc-appinsights.min.js.map --compress"
   },
   "repository": {
     "type": "git",
@@ -32,7 +35,8 @@
   "devDependencies": {
     "concurrently": "^2.1.0",
     "lite-server": "^2.2.0",
-    "typescript": "1.8.10",
-    "typings": "^1.0.4"
+    "typescript": "^1.9.0-dev.20160607-1.0",
+    "typings": "^1.0.4",
+    "uglify-js": "^2.6.2"
   }
 }

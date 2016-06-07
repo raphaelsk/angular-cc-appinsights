@@ -1,0 +1,38 @@
+{
+  "name": "angular-cc-appinsights",
+  "version": "0.0.1",
+  "description": "An AngularJS module for integrating Microsoft's Application Insights within a SPA",
+  "main": "dist/angular-cc-appinsights.js",
+  "scripts": {
+    "lite": "lite-server",
+    "postinstall": "typings install",
+    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typings": "typings"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/christianacca/angular-cc-appinsights.git"
+  },
+  "keywords": [
+    "angularjs",
+    "application insights",
+    "logging",
+    "azure",
+    "performance monitoring",
+    "request monitoring",
+    "exception monitoring"
+  ],
+  "author": "christianacca",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/christianacca/angular-cc-appinsights/issues"
+  },
+  "homepage": "https://github.com/christianacca/angular-cc-appinsights#readme",
+  "devDependencies": {
+    "concurrently": "^2.1.0",
+    "lite-server": "^2.2.0",
+    "typescript": "1.8.10",
+    "typings": "^1.0.4"
+  }
+}

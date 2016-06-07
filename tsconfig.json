@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "system",
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "outDir": "./dist",
+    "outFile": "./dist/angular-cc-appinsights.js",
+    "allowJs": true
+  },
+  "files": [
+    "src/appInsightsModule.js",
+    "src/appInsights.js",
+    "src/appInsightsHttpInterceptor.js",
+    "src/defaultPageViewTelemetryInitializer.js",
+    "src/runBlock.js"
+  ]
+}

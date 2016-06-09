@@ -15,10 +15,13 @@
     "allowJs": true
   },
   "files": [
-    "src/appInsightsModule.js",
-    "src/appInsights.js",
-    "src/appInsightsHttpInterceptor.js",
-    "src/defaultPageViewTelemetryInitializer.js",
-    "src/runBlock.js"
+    "src/appInsightsModule.ts",
+    "src/appInsights.ts",
+    "src/appInsightsHttpInterceptor.ts",
+    "src/defaultPageViewTelemetryInitializer.ts",
+    "src/runBlock.ts",
+    "typings/index.d.ts",
+    "typings-custom/ms-application-insights.d.ts",
+    "typings-custom/angular-route-typings.d.ts"
   ]
 }

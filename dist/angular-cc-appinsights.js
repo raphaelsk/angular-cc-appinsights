@@ -12,9 +12,9 @@ var cc;
     (function (appinsights) {
         'use strict';
         var AppInsightsProvider = (function () {
-            function AppInsightsProvider($provide, $httpProvider) {
-                this.$provide = $provide;
-                this.$httpProvider = $httpProvider;
+            function AppInsightsProvider(_$provide, _$httpProvider) {
+                this._$provide = _$provide;
+                this._$httpProvider = _$httpProvider;
                 this.configOptions = {};
                 this.defaultOptions = {
                     autoRun: true,
@@ -26,22 +26,22 @@ var cc;
                     telemetryInitializers: []
                 };
                 this.$get.$inject = ['$injector'];
-                this.decorateExceptionHandler.$inject = ['$delegate', '$window'];
+                this._decorateExceptionHandler.$inject = ['$delegate', '$window'];
             }
             AppInsightsProvider.prototype.$get = function ($injector) {
                 return $injector.instantiate(appinsights.AppInsights, { configOptions: this.configOptions });
             };
             AppInsightsProvider.prototype.configure = function (options) {
                 // todo: replace extend with a Object.assign (will require a polyfill for older browsers)
-                this.configOptions = this.extend(this.configOptions, this.defaultOptions, options);
+                this.configOptions = this._extend(this.configOptions, this.defaultOptions, options);
                 if (this.configOptions.autoTrackExceptions) {
-                    this.$provide.decorator("$exceptionHandler", this.decorateExceptionHandler);
+                    this._$provide.decorator("$exceptionHandler", this._decorateExceptionHandler);
                 }
                 if (this.configOptions.addPageViewCorrelationHeader) {
-                    this.$httpProvider.interceptors.push('ccAppInsightsHttpInterceptor');
+                    this._$httpProvider.interceptors.push('ccAppInsightsHttpInterceptor');
                 }
             };
-            AppInsightsProvider.prototype.decorateExceptionHandler = function ($delegate, $window) {
+            AppInsightsProvider.prototype._decorateExceptionHandler = function ($delegate, $window) {
                 // note: using a direct reference to appInsights SDK (ie via $window) as worried about 
                 // an exception being thrown by appInsights angular service itself
                 return function appInsightsExceptionHandler(exception, cause) {
@@ -56,7 +56,7 @@ var cc;
                     }
                 };
             };
-            AppInsightsProvider.prototype.extend = function (target) {
+            AppInsightsProvider.prototype._extend = function (target) {
                 var sources = [];
                 for (var _i = 1; _i < arguments.length; _i++) {
                     sources[_i - 1] = arguments[_i];
@@ -85,89 +85,89 @@ var cc;
     (function (appinsights) {
         'use strict';
         var AppInsights = (function () {
-            function AppInsights($rootScope, $location, $window, configOptions, $injector) {
-                this.$rootScope = $rootScope;
-                this.$location = $location;
-                this.$window = $window;
+            function AppInsights(_$rootScope, _$location, _$window, configOptions, _$injector) {
+                this._$rootScope = _$rootScope;
+                this._$location = _$location;
+                this._$window = _$window;
                 this.configOptions = configOptions;
-                this.$injector = $injector;
-                this.hasRun = false;
-                this.appInsights = $window.appInsights;
-                this.service = $window.appInsights;
+                this._$injector = _$injector;
+                this._hasRun = false;
+                this._appInsights = _$window.appInsights;
+                this.service = _$window.appInsights;
             }
             AppInsights.prototype.run = function () {
                 var _this = this;
-                if (this.hasRun || !this.appInsights)
+                if (this._hasRun || !this._appInsights)
                     return;
-                this.hasRun = true;
+                this._hasRun = true;
                 // todo: consider changing pattern of making configOptions have optional members, then remove '[]'
-                this.addTelemetryInitializers(this.configOptions.pageViewTelemetryInitializers || [], function (envelope) { return _this.isPageViewTelemetryItem(envelope); });
-                this.addTelemetryInitializers(this.configOptions.ajaxTelemetryInitializers || [], function (envelope) { return _this.isAjaxTelemetryItem(envelope); });
-                this.addTelemetryInitializers(this.configOptions.telemetryInitializers || []);
+                this._addTelemetryInitializers(this.configOptions.pageViewTelemetryInitializers || [], function (envelope) { return _this._isPageViewTelemetryItem(envelope); });
+                this._addTelemetryInitializers(this.configOptions.ajaxTelemetryInitializers || [], function (envelope) { return _this._isAjaxTelemetryItem(envelope); });
+                this._addTelemetryInitializers(this.configOptions.telemetryInitializers || []);
                 if (this.configOptions.autoTrackPageViews) {
-                    this.autoTrackPageViews();
+                    this._autoTrackPageViews();
                 }
             };
-            AppInsights.prototype.addTelemetryInitializers = function (initializers, condition) {
+            AppInsights.prototype._addTelemetryInitializers = function (initializers, condition) {
                 var _this = this;
                 if (!initializers)
                     return;
                 initializers.forEach(function (initializer) {
                     if (typeof initializer === 'string') {
-                        initializer = _this.$injector.get(initializer);
+                        initializer = _this._$injector.get(initializer);
                     }
                     var ti = condition != null
-                        ? _this.createConditionalTelemetryInitializer(initializer, condition)
+                        ? _this._createConditionalTelemetryInitializer(initializer, condition)
                         : initializer;
-                    _this.appInsights.context.addTelemetryInitializer(ti);
+                    _this._appInsights.context.addTelemetryInitializer(ti);
                 });
             };
-            AppInsights.prototype.autoTrackPageViews = function () {
+            AppInsights.prototype._autoTrackPageViews = function () {
                 var _this = this;
-                this.$rootScope.$on('$routeChangeStart', function (evt, next) {
-                    _this.trackNewPage(evt, next);
+                this._$rootScope.$on('$routeChangeStart', function (evt, next) {
+                    _this._trackNewPage(evt, next);
                 });
-                this.$rootScope.$on('$routeChangeSuccess', function (evt, current) {
-                    _this.recordPageView(evt, current);
+                this._$rootScope.$on('$routeChangeSuccess', function (evt, current) {
+                    _this._recordPageView(evt, current);
                 });
-                this.$rootScope.$on('$routeChangeError', function (evt, route) {
-                    _this.recordPageView(evt, route);
-                    _this.appInsights.context.operation = _this.previousOperation;
+                this._$rootScope.$on('$routeChangeError', function (evt, route) {
+                    _this._recordPageView(evt, route);
+                    _this._appInsights.context.operation = _this._previousOperation;
                 });
             };
-            AppInsights.prototype.createConditionalTelemetryInitializer = function (initializer, condition) {
+            AppInsights.prototype._createConditionalTelemetryInitializer = function (initializer, condition) {
                 return function (envelope) {
                     if (!condition(envelope))
                         return;
                     return initializer.apply(null, arguments);
                 };
             };
-            AppInsights.prototype.isPageViewTelemetryItem = function (envelope) {
+            AppInsights.prototype._isPageViewTelemetryItem = function (envelope) {
                 return envelope.name === Microsoft.ApplicationInsights.Telemetry.PageView.envelopeType;
             };
-            AppInsights.prototype.isAjaxTelemetryItem = function (envelope) {
+            AppInsights.prototype._isAjaxTelemetryItem = function (envelope) {
                 return envelope.name === Microsoft.ApplicationInsights.Telemetry.RemoteDependencyData.envelopeType &&
                     envelope.data.baseData.dependencyKind === AI.DependencyKind.Http;
             };
-            AppInsights.prototype.recordPageView = function (evt, route) {
-                if (this.pageInProgress == null)
+            AppInsights.prototype._recordPageView = function (evt, route) {
+                if (this._pageInProgress == null)
                     return;
-                this.appInsights.stopTrackPage(this.pageInProgress.name, this.pageInProgress.url);
+                this._appInsights.stopTrackPage(this._pageInProgress.name, this._pageInProgress.url);
             };
-            AppInsights.prototype.trackNewPage = function (evt, route) {
+            AppInsights.prototype._trackNewPage = function (evt, route) {
                 // tried to navigate to a route that does not exist, requires url normalization, 
                 // or is null as a result of an error; either way a route change shouldn't be recorded
                 if (!route || route.redirectTo != null) {
-                    this.pageInProgress = null;
+                    this._pageInProgress = null;
                     return;
                 }
-                this.pageInProgress = { name: this.$location.path() || '/', url: this.$location.url() || '/' };
-                var newOperation = new this.$window.Microsoft.ApplicationInsights.Context.Operation();
-                newOperation.name = this.pageInProgress.name;
-                this.previousOperation = this.appInsights.context.operation;
-                this.appInsights.context.operation = newOperation;
+                this._pageInProgress = { name: this._$location.path() || '/', url: this._$location.url() || '/' };
+                var newOperation = new this._$window.Microsoft.ApplicationInsights.Context.Operation();
+                newOperation.name = this._pageInProgress.name;
+                this._previousOperation = this._appInsights.context.operation;
+                this._appInsights.context.operation = newOperation;
                 // start timer for page load timings
-                this.appInsights.startTrackPage(this.pageInProgress.name);
+                this._appInsights.startTrackPage(this._pageInProgress.name);
             };
             AppInsights.$inject = ['$rootScope', '$location', '$window', 'configOptions', '$injector'];
             return AppInsights;
@@ -190,18 +190,18 @@ var cc;
         var AppInsightsHttpInterceptor = (function () {
             function AppInsightsHttpInterceptor(appInsights) {
                 var _this = this;
-                this.impl = appInsights.service;
+                this._impl = appInsights.service;
                 if (typeof appInsights.configOptions.addPageViewCorrelationHeader === "string") {
-                    this.pageViewIdHeaderKey = appInsights.configOptions.addPageViewCorrelationHeader;
+                    this._pageViewIdHeaderKey = appInsights.configOptions.addPageViewCorrelationHeader;
                 }
                 else {
-                    this.pageViewIdHeaderKey = 'ai-pv-opid';
+                    this._pageViewIdHeaderKey = 'ai-pv-opid';
                 }
-                this.request = this.impl ? function (config) { return _this.addHeaders(config); } : angular.identity;
+                this.request = this._impl ? function (config) { return _this._addHeaders(config); } : angular.identity;
             }
-            AppInsightsHttpInterceptor.prototype.addHeaders = function (config) {
-                if (config.headers && this.impl) {
-                    config.headers[this.pageViewIdHeaderKey] = this.impl.context.operation.id;
+            AppInsightsHttpInterceptor.prototype._addHeaders = function (config) {
+                if (config.headers && this._impl) {
+                    config.headers[this._pageViewIdHeaderKey] = this._impl.context.operation.id;
                 }
                 return config;
             };

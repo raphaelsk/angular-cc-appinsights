@@ -4,69 +4,69 @@ namespace cc.appinsights {
     export class AppInsights {
         static $inject = ['$rootScope', '$location', '$window', 'configOptions', '$injector'];
 
-        private appInsights: Microsoft.ApplicationInsights.AppInsights;
-        private previousOperation: Microsoft.ApplicationInsights.Context.Operation;
-        private pageInProgress: { name: string, url: string } | null;
-        private hasRun = false;
+        private _appInsights: Microsoft.ApplicationInsights.AppInsights;
+        private _previousOperation: Microsoft.ApplicationInsights.Context.Operation;
+        private _pageInProgress: { name: string, url: string } | null;
+        private _hasRun = false;
         public service: Microsoft.ApplicationInsights.AppInsights;
 
-        constructor(private $rootScope: ng.IRootScopeService,
-            private $location: ng.ILocationService,
-            private $window: CustomWindow,
+        constructor(private _$rootScope: ng.IRootScopeService,
+            private _$location: ng.ILocationService,
+            private _$window: CustomWindow,
             public configOptions: AppInsightsConfig,
-            private $injector: ng.auto.IInjectorService) {
+            private _$injector: ng.auto.IInjectorService) {
 
-            this.appInsights = $window.appInsights;
-            this.service = $window.appInsights
+            this._appInsights = _$window.appInsights;
+            this.service = _$window.appInsights
         }
 
         public run() {
-            if (this.hasRun || !this.appInsights) return;
+            if (this._hasRun || !this._appInsights) return;
 
-            this.hasRun = true;
+            this._hasRun = true;
 
             // todo: consider changing pattern of making configOptions have optional members, then remove '[]'
-            this.addTelemetryInitializers(
+            this._addTelemetryInitializers(
                 this.configOptions.pageViewTelemetryInitializers || [], 
-                (envelope) => this.isPageViewTelemetryItem(envelope));
-            this.addTelemetryInitializers(
+                (envelope) => this._isPageViewTelemetryItem(envelope));
+            this._addTelemetryInitializers(
                 this.configOptions.ajaxTelemetryInitializers || [], 
-                (envelope) => this.isAjaxTelemetryItem(envelope));
-            this.addTelemetryInitializers(this.configOptions.telemetryInitializers || []);
+                (envelope) => this._isAjaxTelemetryItem(envelope));
+            this._addTelemetryInitializers(this.configOptions.telemetryInitializers || []);
 
             if (this.configOptions.autoTrackPageViews) {
-                this.autoTrackPageViews();
+                this._autoTrackPageViews();
             }
         }
 
-        private addTelemetryInitializers(initializers: Array<TelemetryInitializer | string>, condition?: TelemetryItemSelector) {
+        private _addTelemetryInitializers(initializers: Array<TelemetryInitializer | string>, condition?: TelemetryItemSelector) {
             if (!initializers) return;
 
             initializers.forEach(initializer => {
                 if (typeof initializer === 'string') {
-                    initializer = this.$injector.get<TelemetryInitializer>(initializer)
+                    initializer = this._$injector.get<TelemetryInitializer>(initializer)
                 }
                 const ti = condition != null
-                    ? this.createConditionalTelemetryInitializer(initializer, condition)
+                    ? this._createConditionalTelemetryInitializer(initializer, condition)
                     : initializer;
-                this.appInsights.context.addTelemetryInitializer(ti);
+                this._appInsights.context.addTelemetryInitializer(ti);
             });
         }
 
-        private autoTrackPageViews() {
-            this.$rootScope.$on('$routeChangeStart', (evt: ng.IAngularEvent, next: ng.route.IRoute) => {
-                this.trackNewPage(evt, next);
+        private _autoTrackPageViews() {
+            this._$rootScope.$on('$routeChangeStart', (evt: ng.IAngularEvent, next: ng.route.IRoute) => {
+                this._trackNewPage(evt, next);
             });
-            this.$rootScope.$on('$routeChangeSuccess', (evt: ng.IAngularEvent, current: ng.route.IRoute) => {
-                this.recordPageView(evt, current);
+            this._$rootScope.$on('$routeChangeSuccess', (evt: ng.IAngularEvent, current: ng.route.IRoute) => {
+                this._recordPageView(evt, current);
             });
-            this.$rootScope.$on('$routeChangeError', (evt: ng.IAngularEvent, route: ng.route.IRoute) => {
-                this.recordPageView(evt, route);
-                this.appInsights.context.operation = this.previousOperation;
+            this._$rootScope.$on('$routeChangeError', (evt: ng.IAngularEvent, route: ng.route.IRoute) => {
+                this._recordPageView(evt, route);
+                this._appInsights.context.operation = this._previousOperation;
             });
         }
 
-        private createConditionalTelemetryInitializer(initializer: TelemetryInitializer, condition: TelemetryItemSelector): TelemetryInitializer {
+        private _createConditionalTelemetryInitializer(initializer: TelemetryInitializer, condition: TelemetryItemSelector): TelemetryInitializer {
             return function (envelope) {
                 if (!condition(envelope)) return;
 
@@ -74,38 +74,38 @@ namespace cc.appinsights {
             };
         }
 
-        private isPageViewTelemetryItem(envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) {
+        private _isPageViewTelemetryItem(envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) {
             return envelope.name === Microsoft.ApplicationInsights.Telemetry.PageView.envelopeType;
         }
 
-        private isAjaxTelemetryItem(envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) {
+        private _isAjaxTelemetryItem(envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) {
             return envelope.name === Microsoft.ApplicationInsights.Telemetry.RemoteDependencyData.envelopeType &&
                 envelope.data.baseData.dependencyKind === AI.DependencyKind.Http;
         }
 
-        private recordPageView(evt: ng.IAngularEvent, route: ng.route.IRoute) {
-            if (this.pageInProgress == null) return;
+        private _recordPageView(evt: ng.IAngularEvent, route: ng.route.IRoute) {
+            if (this._pageInProgress == null) return;
 
-            this.appInsights.stopTrackPage(this.pageInProgress.name, this.pageInProgress.url);
+            this._appInsights.stopTrackPage(this._pageInProgress.name, this._pageInProgress.url);
         }
 
-        private trackNewPage(evt: ng.IAngularEvent, route: ng.route.IRoute) {
+        private _trackNewPage(evt: ng.IAngularEvent, route: ng.route.IRoute) {
             // tried to navigate to a route that does not exist, requires url normalization, 
             // or is null as a result of an error; either way a route change shouldn't be recorded
             if (!route || route.redirectTo != null) {
-                this.pageInProgress = null;
+                this._pageInProgress = null;
                 return;
             }
 
-            this.pageInProgress = { name: this.$location.path() || '/', url: this.$location.url() || '/' };
-            const newOperation = new this.$window.Microsoft.ApplicationInsights.Context.Operation();
-            newOperation.name = this.pageInProgress.name;
+            this._pageInProgress = { name: this._$location.path() || '/', url: this._$location.url() || '/' };
+            const newOperation = new this._$window.Microsoft.ApplicationInsights.Context.Operation();
+            newOperation.name = this._pageInProgress.name;
 
-            this.previousOperation = this.appInsights.context.operation;
-            this.appInsights.context.operation = newOperation;
+            this._previousOperation = this._appInsights.context.operation;
+            this._appInsights.context.operation = newOperation;
 
             // start timer for page load timings
-            this.appInsights.startTrackPage(this.pageInProgress.name);
+            this._appInsights.startTrackPage(this._pageInProgress.name);
         }
     }
 }

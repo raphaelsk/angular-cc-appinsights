@@ -15,9 +15,9 @@ namespace cc.appinsights {
                 telemetryInitializers: []
             };
 
-        constructor(private $provide: ng.auto.IProvideService, private $httpProvider: ng.IHttpProvider) {
+        constructor(private _$provide: ng.auto.IProvideService, private _$httpProvider: ng.IHttpProvider) {
             this.$get.$inject = ['$injector'];
-            this.decorateExceptionHandler.$inject = ['$delegate', '$window'];
+            this._decorateExceptionHandler.$inject = ['$delegate', '$window'];
         }
 
         public $get($injector: ng.auto.IInjectorService) {
@@ -26,16 +26,16 @@ namespace cc.appinsights {
 
         public configure(options: AppInsightsConfig) {
             // todo: replace extend with a Object.assign (will require a polyfill for older browsers)
-            this.configOptions = this.extend(this.configOptions, this.defaultOptions, options);
+            this.configOptions = this._extend(this.configOptions, this.defaultOptions, options);
             if (this.configOptions.autoTrackExceptions) {
-                this.$provide.decorator("$exceptionHandler", this.decorateExceptionHandler);
+                this._$provide.decorator("$exceptionHandler", this._decorateExceptionHandler);
             }
             if (this.configOptions.addPageViewCorrelationHeader) {
-                this.$httpProvider.interceptors.push('ccAppInsightsHttpInterceptor');
+                this._$httpProvider.interceptors.push('ccAppInsightsHttpInterceptor');
             }
         }
 
-        private decorateExceptionHandler(
+        private _decorateExceptionHandler(
             $delegate: ng.IExceptionHandlerService,
             $window: CustomWindow) {
 
@@ -54,7 +54,7 @@ namespace cc.appinsights {
             };
         }
 
-        private extend(target: any, ...sources: any[]) {
+        private _extend(target: any, ...sources: any[]) {
             for (let i = 0; i < sources.length; i++) {
                 let source = sources[i] || {};
                 for (let prop in source) {

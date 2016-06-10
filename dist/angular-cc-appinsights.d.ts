@@ -2,40 +2,40 @@ declare namespace cc.appinsights {
 }
 declare namespace cc.appinsights {
     class AppInsightsProvider {
-        private $provide;
-        private $httpProvider;
+        private _$provide;
+        private _$httpProvider;
         static $inject: string[];
         configOptions: AppInsightsConfig;
         defaultOptions: AppInsightsConfig;
-        constructor($provide: ng.auto.IProvideService, $httpProvider: ng.IHttpProvider);
+        constructor(_$provide: ng.auto.IProvideService, _$httpProvider: ng.IHttpProvider);
         $get($injector: ng.auto.IInjectorService): {};
         configure(options: AppInsightsConfig): void;
-        private decorateExceptionHandler($delegate, $window);
-        private extend(target, ...sources);
+        private _decorateExceptionHandler($delegate, $window);
+        private _extend(target, ...sources);
     }
 }
 declare namespace cc.appinsights {
     class AppInsights {
-        private $rootScope;
-        private $location;
-        private $window;
+        private _$rootScope;
+        private _$location;
+        private _$window;
         configOptions: AppInsightsConfig;
-        private $injector;
+        private _$injector;
         static $inject: string[];
-        private appInsights;
-        private previousOperation;
-        private pageInProgress;
-        private hasRun;
+        private _appInsights;
+        private _previousOperation;
+        private _pageInProgress;
+        private _hasRun;
         service: Microsoft.ApplicationInsights.AppInsights;
-        constructor($rootScope: ng.IRootScopeService, $location: ng.ILocationService, $window: CustomWindow, configOptions: AppInsightsConfig, $injector: ng.auto.IInjectorService);
+        constructor(_$rootScope: ng.IRootScopeService, _$location: ng.ILocationService, _$window: CustomWindow, configOptions: AppInsightsConfig, _$injector: ng.auto.IInjectorService);
         run(): void;
-        private addTelemetryInitializers(initializers, condition?);
-        private autoTrackPageViews();
-        private createConditionalTelemetryInitializer(initializer, condition);
-        private isPageViewTelemetryItem(envelope);
-        private isAjaxTelemetryItem(envelope);
-        private recordPageView(evt, route);
-        private trackNewPage(evt, route);
+        private _addTelemetryInitializers(initializers, condition?);
+        private _autoTrackPageViews();
+        private _createConditionalTelemetryInitializer(initializer, condition);
+        private _isPageViewTelemetryItem(envelope);
+        private _isAjaxTelemetryItem(envelope);
+        private _recordPageView(evt, route);
+        private _trackNewPage(evt, route);
     }
 }
 declare namespace cc.appinsights {

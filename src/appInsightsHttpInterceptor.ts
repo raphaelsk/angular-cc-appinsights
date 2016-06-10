@@ -1,32 +1,30 @@
 namespace cc.appinsights {
     'use strict';
 
-    angular.module('cc-appinsights')
-        .service('ccAppInsightsHttpInterceptor', AppInsightsHttpInterceptor);
+    class AppInsightsHttpInterceptor {
+        static $inject = ['ccAppInsights']
+        private impl: Microsoft.ApplicationInsights.AppInsights;
+        private pageViewIdHeaderKey: string;
+        public request: (config: ng.IRequestConfig) => ng.IRequestConfig;
 
-    AppInsightsHttpInterceptor.$inject = ['ccAppInsights'];
-
-    function AppInsightsHttpInterceptor(appInsights: cc.appinsights.AppInsights) {
-
-        var impl = appInsights.service,
-            pageViewIdHeaderKey = 'ai-pv-opid';
-
-        init();
-        this.request = impl ? addHeaders : angular.identity;
-
-        function init() {
+        constructor(appInsights: cc.appinsights.AppInsights) {
+            this.impl = appInsights.service;
             if (typeof appInsights.configOptions.addPageViewCorrelationHeader === "string") {
-                pageViewIdHeaderKey = appInsights.configOptions.addPageViewCorrelationHeader;
+                this.pageViewIdHeaderKey = appInsights.configOptions.addPageViewCorrelationHeader;
+            } else {
+                this.pageViewIdHeaderKey = 'ai-pv-opid';
             }
+            this.request = this.impl ? (config) => this.addHeaders(config) : angular.identity;
         }
 
-        ///////////
-
-        function addHeaders(config: ng.IRequestConfig) {
-            if (config.headers) {
-                config.headers[pageViewIdHeaderKey] = impl.context.operation.id;
+        private addHeaders(config: ng.IRequestConfig) {
+            if (config.headers && this.impl) {
+                config.headers[this.pageViewIdHeaderKey] = this.impl.context.operation.id;
             }
             return config;
         }
     }
+
+    angular.module('cc-appinsights')
+        .service('ccAppInsightsHttpInterceptor', AppInsightsHttpInterceptor);
 }

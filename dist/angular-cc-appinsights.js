@@ -11,17 +11,12 @@ var cc;
     var appinsights;
     (function (appinsights) {
         'use strict';
-        // todo: remove explicit class once appInsightsProvider is refactored to be a class
-        angular.module('cc-appinsights')
-            .provider('ccAppInsights', appInsightsProvider);
-        appInsightsProvider.$inject = ['$provide', '$httpProvider'];
-        function appInsightsProvider($provide, $httpProvider) {
-            var provider = this;
-            init();
-            ////////////
-            function init() {
-                provider.configOptions = {};
-                provider.defaultOptions = {
+        var AppInsightsProvider = (function () {
+            function AppInsightsProvider($provide, $httpProvider) {
+                this.$provide = $provide;
+                this.$httpProvider = $httpProvider;
+                this.configOptions = {};
+                this.defaultOptions = {
                     autoRun: true,
                     autoTrackExceptions: true,
                     autoTrackPageViews: true,
@@ -30,23 +25,23 @@ var cc;
                     pageViewTelemetryInitializers: ['ccDefaultPageViewTelemetryInitializer'],
                     telemetryInitializers: []
                 };
-                provider.$get = ['$injector', function ($injector) {
-                        return $injector.instantiate(AppInsights, { configOptions: provider.configOptions });
-                    }];
-                provider.configure = configure;
+                this.$get.$inject = ['$injector'];
+                this.decorateExceptionHandler.$inject = ['$delegate', '$window'];
             }
-            function configure(options) {
+            AppInsightsProvider.prototype.$get = function ($injector) {
+                return $injector.instantiate(appinsights.AppInsights, { configOptions: this.configOptions });
+            };
+            AppInsightsProvider.prototype.configure = function (options) {
                 // todo: replace extend with a Object.assign (will require a polyfill for older browsers)
-                provider.configOptions = extend(provider.configOptions, provider.defaultOptions, options);
-                if (provider.configOptions.autoTrackExceptions) {
-                    $provide.decorator("$exceptionHandler", decorateExceptionHandler);
+                this.configOptions = this.extend(this.configOptions, this.defaultOptions, options);
+                if (this.configOptions.autoTrackExceptions) {
+                    this.$provide.decorator("$exceptionHandler", this.decorateExceptionHandler);
                 }
-                if (provider.configOptions.addPageViewCorrelationHeader) {
-                    $httpProvider.interceptors.push('ccAppInsightsHttpInterceptor');
+                if (this.configOptions.addPageViewCorrelationHeader) {
+                    this.$httpProvider.interceptors.push('ccAppInsightsHttpInterceptor');
                 }
-            }
-            decorateExceptionHandler.$inject = ['$delegate', '$window'];
-            function decorateExceptionHandler($delegate, $window) {
+            };
+            AppInsightsProvider.prototype.decorateExceptionHandler = function ($delegate, $window) {
                 // note: using a direct reference to appInsights SDK (ie via $window) as worried about 
                 // an exception being thrown by appInsights angular service itself
                 return function appInsightsExceptionHandler(exception, cause) {
@@ -60,8 +55,8 @@ var cc;
                         }
                     }
                 };
-            }
-            function extend(target) {
+            };
+            AppInsightsProvider.prototype.extend = function (target) {
                 var sources = [];
                 for (var _i = 1; _i < arguments.length; _i++) {
                     sources[_i - 1] = arguments[_i];
@@ -75,8 +70,20 @@ var cc;
                     }
                 }
                 return target;
-            }
-        }
+            };
+            AppInsightsProvider.$inject = ['$provide', '$httpProvider'];
+            return AppInsightsProvider;
+        }());
+        appinsights.AppInsightsProvider = AppInsightsProvider;
+        angular.module('cc-appinsights')
+            .provider('ccAppInsights', AppInsightsProvider);
+    })(appinsights = cc.appinsights || (cc.appinsights = {}));
+})(cc || (cc = {}));
+var cc;
+(function (cc) {
+    var appinsights;
+    (function (appinsights) {
+        'use strict';
         var AppInsights = (function () {
             function AppInsights($rootScope, $location, $window, configOptions, $injector) {
                 this.$rootScope = $rootScope;
@@ -173,26 +180,36 @@ var cc;
     var appinsights;
     (function (appinsights) {
         'use strict';
-        angular.module('cc-appinsights')
-            .service('ccAppInsightsHttpInterceptor', AppInsightsHttpInterceptor);
-        AppInsightsHttpInterceptor.$inject = ['ccAppInsights'];
-        function AppInsightsHttpInterceptor(appInsights) {
-            var impl = appInsights.service, pageViewIdHeaderKey = 'ai-pv-opid';
-            init();
-            this.request = impl ? addHeaders : angular.identity;
-            function init() {
+    })(appinsights = cc.appinsights || (cc.appinsights = {}));
+})(cc || (cc = {}));
+var cc;
+(function (cc) {
+    var appinsights;
+    (function (appinsights) {
+        'use strict';
+        var AppInsightsHttpInterceptor = (function () {
+            function AppInsightsHttpInterceptor(appInsights) {
+                var _this = this;
+                this.impl = appInsights.service;
                 if (typeof appInsights.configOptions.addPageViewCorrelationHeader === "string") {
-                    pageViewIdHeaderKey = appInsights.configOptions.addPageViewCorrelationHeader;
+                    this.pageViewIdHeaderKey = appInsights.configOptions.addPageViewCorrelationHeader;
                 }
+                else {
+                    this.pageViewIdHeaderKey = 'ai-pv-opid';
+                }
+                this.request = this.impl ? function (config) { return _this.addHeaders(config); } : angular.identity;
             }
-            ///////////
-            function addHeaders(config) {
-                if (config.headers) {
-                    config.headers[pageViewIdHeaderKey] = impl.context.operation.id;
+            AppInsightsHttpInterceptor.prototype.addHeaders = function (config) {
+                if (config.headers && this.impl) {
+                    config.headers[this.pageViewIdHeaderKey] = this.impl.context.operation.id;
                 }
                 return config;
-            }
-        }
+            };
+            AppInsightsHttpInterceptor.$inject = ['ccAppInsights'];
+            return AppInsightsHttpInterceptor;
+        }());
+        angular.module('cc-appinsights')
+            .service('ccAppInsightsHttpInterceptor', AppInsightsHttpInterceptor);
     })(appinsights = cc.appinsights || (cc.appinsights = {}));
 })(cc || (cc = {}));
 var cc;

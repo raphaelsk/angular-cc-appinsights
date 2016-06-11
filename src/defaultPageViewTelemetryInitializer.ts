@@ -2,11 +2,11 @@ namespace cc.appinsights {
     'use strict';
 
     angular.module('cc-appinsights')
-        .factory('ccDefaultPageViewTelemetryInitializer', defaultPageViewTelemetryInitializer);
+        .factory('_ccDefaultPageViewTelemetryInitializer', _defaultPageViewTelemetryInitializer);
 
-    defaultPageViewTelemetryInitializer.$inject = ['$route'];
+    _defaultPageViewTelemetryInitializer.$inject = ['$route'];
 
-    function defaultPageViewTelemetryInitializer($route: ng.route.IRouteService) {
+    function _defaultPageViewTelemetryInitializer($route: ng.route.IRouteService) {
 
         return setPageViewProperties;
 

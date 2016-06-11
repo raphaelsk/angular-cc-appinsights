@@ -1,7 +1,7 @@
 namespace cc.appinsights {
     'use strict';
 
-    class AppInsightsHttpInterceptor {
+    class _AppInsightsHttpInterceptor {
         static $inject = ['ccAppInsights']
         private _impl: Microsoft.ApplicationInsights.AppInsights;
         private _pageViewIdHeaderKey: string;
@@ -26,5 +26,5 @@ namespace cc.appinsights {
     }
 
     angular.module('cc-appinsights')
-        .service('ccAppInsightsHttpInterceptor', AppInsightsHttpInterceptor);
+        .service('_ccAppInsightsHttpInterceptor', _AppInsightsHttpInterceptor);
 }

@@ -31,7 +31,7 @@ namespace cc.appinsights {
         ajaxTelemetryInitializers?: Array<TelemetryInitializer | string>,
         /**
          * Telemtry initializers that should run when a page view item is about to be sent;
-         * ccDefaultPageViewTelemetryInitializer will be included by default
+         * _ccDefaultPageViewTelemetryInitializer will be included by default
          */
         pageViewTelemetryInitializers?: Array<TelemetryInitializer | string>,
         /**

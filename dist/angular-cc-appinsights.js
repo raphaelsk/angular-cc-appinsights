@@ -22,7 +22,7 @@ var cc;
                     autoTrackPageViews: true,
                     addPageViewCorrelationHeader: false,
                     ajaxTelemetryInitializers: [],
-                    pageViewTelemetryInitializers: ['ccDefaultPageViewTelemetryInitializer'],
+                    pageViewTelemetryInitializers: ['_ccDefaultPageViewTelemetryInitializer'],
                     telemetryInitializers: []
                 };
                 this.$get.$inject = ['$injector'];
@@ -38,7 +38,7 @@ var cc;
                     this._$provide.decorator("$exceptionHandler", this._decorateExceptionHandler);
                 }
                 if (this.configOptions.addPageViewCorrelationHeader) {
-                    this._$httpProvider.interceptors.push('ccAppInsightsHttpInterceptor');
+                    this._$httpProvider.interceptors.push('_ccAppInsightsHttpInterceptor');
                 }
             };
             AppInsightsProvider.prototype._decorateExceptionHandler = function ($delegate, $window) {
@@ -187,8 +187,8 @@ var cc;
     var appinsights;
     (function (appinsights) {
         'use strict';
-        var AppInsightsHttpInterceptor = (function () {
-            function AppInsightsHttpInterceptor(appInsights) {
+        var _AppInsightsHttpInterceptor = (function () {
+            function _AppInsightsHttpInterceptor(appInsights) {
                 var _this = this;
                 this._impl = appInsights.service;
                 if (typeof appInsights.configOptions.addPageViewCorrelationHeader === "string") {
@@ -199,17 +199,17 @@ var cc;
                 }
                 this.request = this._impl ? function (config) { return _this._addHeaders(config); } : angular.identity;
             }
-            AppInsightsHttpInterceptor.prototype._addHeaders = function (config) {
+            _AppInsightsHttpInterceptor.prototype._addHeaders = function (config) {
                 if (config.headers && this._impl) {
                     config.headers[this._pageViewIdHeaderKey] = this._impl.context.operation.id;
                 }
                 return config;
             };
-            AppInsightsHttpInterceptor.$inject = ['ccAppInsights'];
-            return AppInsightsHttpInterceptor;
+            _AppInsightsHttpInterceptor.$inject = ['ccAppInsights'];
+            return _AppInsightsHttpInterceptor;
         }());
         angular.module('cc-appinsights')
-            .service('ccAppInsightsHttpInterceptor', AppInsightsHttpInterceptor);
+            .service('_ccAppInsightsHttpInterceptor', _AppInsightsHttpInterceptor);
     })(appinsights = cc.appinsights || (cc.appinsights = {}));
 })(cc || (cc = {}));
 var cc;
@@ -218,9 +218,9 @@ var cc;
     (function (appinsights) {
         'use strict';
         angular.module('cc-appinsights')
-            .factory('ccDefaultPageViewTelemetryInitializer', defaultPageViewTelemetryInitializer);
-        defaultPageViewTelemetryInitializer.$inject = ['$route'];
-        function defaultPageViewTelemetryInitializer($route) {
+            .factory('_ccDefaultPageViewTelemetryInitializer', _defaultPageViewTelemetryInitializer);
+        _defaultPageViewTelemetryInitializer.$inject = ['$route'];
+        function _defaultPageViewTelemetryInitializer($route) {
             return setPageViewProperties;
             function parseControllerName(name) {
                 if (typeof name !== "string") {

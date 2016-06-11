@@ -3,20 +3,38 @@ declare namespace cc.appinsights {
         private _$provide;
         private _$httpProvider;
         static $inject: string[];
+        /**
+         * The final configuration options that were used to configure the module.
+         * Note: this object will only be assigned values only once the `configure` method has been called.
+         */
         configOptions: AppInsightsConfig;
+        /**
+         * The default options values that will be used if not overridden by options supplied by a call to `configure`.
+         */
         defaultOptions: AppInsightsConfig;
         constructor(_$provide: ng.auto.IProvideService, _$httpProvider: ng.IHttpProvider);
         $get($injector: ng.auto.IInjectorService): {};
+        /**
+         * Configures the `angular-cc-appinsights` module.
+         * Sets `configOptions` by merging the values from `defaultOptions` with the overriding values
+         * from the `AppInsightsConfig` supplied.
+         */
         configure(options: AppInsightsConfig): void;
         private _decorateExceptionHandler($delegate, $window);
         private _extend(target, ...sources);
     }
 }
 declare namespace cc.appinsights {
+    /**
+     * Used to access the global instance of the AppInsights class created by the official SDK
+     */
     class AppInsights {
         private _$rootScope;
         private _$location;
         private _$window;
+        /**
+         * A reference to `AppInsightsProvider.configOptions`
+         */
         configOptions: AppInsightsConfig;
         private _$injector;
         static $inject: string[];
@@ -24,8 +42,25 @@ declare namespace cc.appinsights {
         private _previousOperation;
         private _pageInProgress;
         private _hasRun;
+        /**
+         * A reference to the global instance of the AppInsights class created by the SDK library.
+         *
+         * This instance provides the API used to explicitly log specific telemetry events and metrics
+         * within an angular application.
+         */
         service: Microsoft.ApplicationInsights.AppInsights;
-        constructor(_$rootScope: ng.IRootScopeService, _$location: ng.ILocationService, _$window: CustomWindow, configOptions: AppInsightsConfig, _$injector: ng.auto.IInjectorService);
+        constructor(_$rootScope: ng.IRootScopeService, _$location: ng.ILocationService, _$window: CustomWindow, 
+            /**
+             * A reference to `AppInsightsProvider.configOptions`
+             */
+            configOptions: AppInsightsConfig, _$injector: ng.auto.IInjectorService);
+        /**
+         * Applies the configuration options to the module during the run phase of the angular application.
+         * For example, adds any angular services registered as telemetry initializers to the SDK.
+         *
+         * Typically you will not need to call this method unless you have explicitly set `AppInsightsConfig.autoRun`
+         * to `false`.
+         */
         run(): void;
         private _addTelemetryInitializers(initializers, condition?);
         private _autoTrackPageViews();
@@ -39,6 +74,9 @@ declare namespace cc.appinsights {
 declare namespace cc.appinsights {
     type TelemetryInitializer = (envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) => boolean;
     type TelemetryItemSelector = (envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) => boolean;
+    /**
+     * Defines the options used to configure the module.
+     */
     interface AppInsightsConfig {
         /**
          * If true, automatically start the service during the run phase of the angular application.

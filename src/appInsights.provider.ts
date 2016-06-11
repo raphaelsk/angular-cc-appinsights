@@ -4,7 +4,14 @@ namespace cc.appinsights {
     export class AppInsightsProvider {
         static $inject = ['$provide', '$httpProvider'];
 
+        /**
+         * The final configuration options that were used to configure the module. 
+         * Note: this object will only be assigned values only once the `configure` method has been called.
+         */
         public configOptions: AppInsightsConfig = {};
+        /**
+         * The default options values that will be used if not overridden by options supplied by a call to `configure`.
+         */
         public defaultOptions: AppInsightsConfig = {
                 autoRun: true,
                 autoTrackExceptions: true,
@@ -24,6 +31,11 @@ namespace cc.appinsights {
             return $injector.instantiate(AppInsights, { configOptions: this.configOptions });
         }
 
+        /**
+         * Configures the `angular-cc-appinsights` module.
+         * Sets `configOptions` by merging the values from `defaultOptions` with the overriding values 
+         * from the `AppInsightsConfig` supplied.
+         */
         public configure(options: AppInsightsConfig) {
             // todo: replace extend with a Object.assign (will require a polyfill for older browsers)
             this.configOptions = this._extend(this.configOptions, this.defaultOptions, options);

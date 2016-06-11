@@ -61,10 +61,13 @@ var appInsights = init.loadAppInsights();
 angular.module('myApp', ['cc-appinsights']);
 ```
 
-* In a angular config block, configure the `ccAppInsightsProvider`:
+* In an angular config function, configure the `ccAppInsightsProvider`:
 ```js
 angular.module('myApp').config(function(ccAppInsightsProvider) {
 	ccAppInsightsProvider.configure(); 
 });
 ```
 
+## API Reference
+
+See [api-reference.md](api-reference.md)

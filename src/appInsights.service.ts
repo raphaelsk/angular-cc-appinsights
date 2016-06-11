@@ -1,6 +1,9 @@
 namespace cc.appinsights {
     'use strict';
 
+    /**
+     * Used to access the global instance of the AppInsights class created by the official SDK
+     */
     export class AppInsights {
         static $inject = ['$rootScope', '$location', '$window', 'configOptions', '$injector'];
 
@@ -8,11 +11,20 @@ namespace cc.appinsights {
         private _previousOperation: Microsoft.ApplicationInsights.Context.Operation;
         private _pageInProgress: { name: string, url: string } | null;
         private _hasRun = false;
+        /**
+         * A reference to the global instance of the AppInsights class created by the SDK library.
+         * 
+         * This instance provides the API used to explicitly log specific telemetry events and metrics
+         * within an angular application.
+         */
         public service: Microsoft.ApplicationInsights.AppInsights;
 
         constructor(private _$rootScope: ng.IRootScopeService,
             private _$location: ng.ILocationService,
             private _$window: CustomWindow,
+            /**
+             * A reference to `AppInsightsProvider.configOptions`
+             */
             public configOptions: AppInsightsConfig,
             private _$injector: ng.auto.IInjectorService) {
 
@@ -20,6 +32,13 @@ namespace cc.appinsights {
             this.service = _$window.appInsights
         }
 
+        /**
+         * Applies the configuration options to the module during the run phase of the angular application.
+         * For example, adds any angular services registered as telemetry initializers to the SDK.
+         * 
+         * Typically you will not need to call this method unless you have explicitly set `AppInsightsConfig.autoRun`
+         * to `false`.
+         */
         public run() {
             if (this._hasRun || !this._appInsights) return;
 

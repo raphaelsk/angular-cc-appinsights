@@ -4,6 +4,9 @@ namespace cc.appinsights {
     export type TelemetryInitializer = (envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) => boolean;
     export type TelemetryItemSelector = (envelope: Microsoft.ApplicationInsights.Telemetry.Common.Envelope) => boolean;
 
+    /**
+     * Defines the options used to configure the module.
+     */
     export interface AppInsightsConfig {
         /**
          * If true, automatically start the service during the run phase of the angular application.

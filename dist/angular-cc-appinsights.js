@@ -7,7 +7,14 @@ var cc;
             function AppInsightsProvider(_$provide, _$httpProvider) {
                 this._$provide = _$provide;
                 this._$httpProvider = _$httpProvider;
+                /**
+                 * The final configuration options that were used to configure the module.
+                 * Note: this object will only be assigned values only once the `configure` method has been called.
+                 */
                 this.configOptions = {};
+                /**
+                 * The default options values that will be used if not overridden by options supplied by a call to `configure`.
+                 */
                 this.defaultOptions = {
                     autoRun: true,
                     autoTrackExceptions: true,
@@ -23,6 +30,11 @@ var cc;
             AppInsightsProvider.prototype.$get = function ($injector) {
                 return $injector.instantiate(appinsights.AppInsights, { configOptions: this.configOptions });
             };
+            /**
+             * Configures the `angular-cc-appinsights` module.
+             * Sets `configOptions` by merging the values from `defaultOptions` with the overriding values
+             * from the `AppInsightsConfig` supplied.
+             */
             AppInsightsProvider.prototype.configure = function (options) {
                 // todo: replace extend with a Object.assign (will require a polyfill for older browsers)
                 this.configOptions = this._extend(this.configOptions, this.defaultOptions, options);
@@ -74,8 +86,15 @@ var cc;
     var appinsights;
     (function (appinsights) {
         'use strict';
+        /**
+         * Used to access the global instance of the AppInsights class created by the official SDK
+         */
         var AppInsights = (function () {
-            function AppInsights(_$rootScope, _$location, _$window, configOptions, _$injector) {
+            function AppInsights(_$rootScope, _$location, _$window, 
+                /**
+                 * A reference to `AppInsightsProvider.configOptions`
+                 */
+                configOptions, _$injector) {
                 this._$rootScope = _$rootScope;
                 this._$location = _$location;
                 this._$window = _$window;
@@ -85,6 +104,13 @@ var cc;
                 this._appInsights = _$window.appInsights;
                 this.service = _$window.appInsights;
             }
+            /**
+             * Applies the configuration options to the module during the run phase of the angular application.
+             * For example, adds any angular services registered as telemetry initializers to the SDK.
+             *
+             * Typically you will not need to call this method unless you have explicitly set `AppInsightsConfig.autoRun`
+             * to `false`.
+             */
             AppInsights.prototype.run = function () {
                 var _this = this;
                 if (this._hasRun || !this._appInsights)

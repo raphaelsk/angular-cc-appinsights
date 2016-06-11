@@ -3,7 +3,7 @@ namespace cc.appinsights {
 
     _defaultPageViewTelemetryInitializer.$inject = ['$route'];
 
-    export function _defaultPageViewTelemetryInitializer($route: ng.route.IRouteService) {
+    export function _defaultPageViewTelemetryInitializer($route: ng.route.IRouteService): TelemetryInitializer {
 
         return setPageViewProperties;
 
@@ -15,12 +15,14 @@ namespace cc.appinsights {
         }
 
         function setPageViewProperties(envelope: Microsoft.Telemetry.Envelope) {
-            if (!$route.current) return;
+            if (!$route.current) return true;
 
             var pageView = envelope.data.baseData;
             pageView.properties = pageView.properties || {};
             pageView.properties["controller"] = parseControllerName($route.current.controller);
             pageView.properties["routePath"] = $route.current.originalPath || "/";
+
+            return true;
         }
     }
 }

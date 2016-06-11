@@ -190,7 +190,7 @@ var cc;
                 this.request = this._impl ? function (config) { return _this._addHeaders(config); } : angular.identity;
             }
             _AppInsightsHttpInterceptor.prototype._addHeaders = function (config) {
-                if (config.headers && this._impl) {
+                if (config.headers) {
                     config.headers[this._pageViewIdHeaderKey] = this._impl.context.operation.id;
                 }
                 return config;
@@ -217,11 +217,12 @@ var cc;
             }
             function setPageViewProperties(envelope) {
                 if (!$route.current)
-                    return;
+                    return true;
                 var pageView = envelope.data.baseData;
                 pageView.properties = pageView.properties || {};
                 pageView.properties["controller"] = parseControllerName($route.current.controller);
                 pageView.properties["routePath"] = $route.current.originalPath || "/";
+                return true;
             }
         }
         appinsights._defaultPageViewTelemetryInitializer = _defaultPageViewTelemetryInitializer;

@@ -86,7 +86,7 @@ declare namespace cc.appinsights {
     }
 }
 declare namespace cc.appinsights {
-    function _defaultPageViewTelemetryInitializer($route: ng.route.IRouteService): (envelope: Microsoft.Telemetry.Envelope) => void;
+    function _defaultPageViewTelemetryInitializer($route: ng.route.IRouteService): TelemetryInitializer;
 }
 declare namespace cc.appinsights {
     function _maybeAutoRun(appInsights: cc.appinsights.AppInsights): void;

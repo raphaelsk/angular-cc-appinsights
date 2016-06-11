@@ -18,7 +18,7 @@ namespace cc.appinsights {
         }
 
         private _addHeaders(config: ng.IRequestConfig) {
-            if (config.headers && this._impl) {
+            if (config.headers) {
                 config.headers[this._pageViewIdHeaderKey] = this._impl.context.operation.id;
             }
             return config;

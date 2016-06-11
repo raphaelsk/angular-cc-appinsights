@@ -1,13 +1,9 @@
 namespace cc.appinsights {
     'use strict';
 
-    angular.module('cc-appinsights')
-        .run(maybeAutoRun);
+    _maybeAutoRun.$inject = ['ccAppInsights'];
 
-
-    maybeAutoRun.$inject = ['ccAppInsights'];
-
-    function maybeAutoRun(appInsights: cc.appinsights.AppInsights) {
+    export function _maybeAutoRun(appInsights: cc.appinsights.AppInsights) {
         if (!appInsights.configOptions.autoRun) return;
 
         appInsights.run();

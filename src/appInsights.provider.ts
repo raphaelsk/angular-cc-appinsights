@@ -65,9 +65,5 @@ namespace cc.appinsights {
             }
             return target;
         }
-
     }
-
-    angular.module('cc-appinsights')
-        .provider('ccAppInsights', AppInsightsProvider);
 }

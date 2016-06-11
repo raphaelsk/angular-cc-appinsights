@@ -1,6 +1,4 @@
 declare namespace cc.appinsights {
-}
-declare namespace cc.appinsights {
     class AppInsightsProvider {
         private _$provide;
         private _$httpProvider;
@@ -78,8 +76,21 @@ declare namespace cc.appinsights {
     }
 }
 declare namespace cc.appinsights {
+    class _AppInsightsHttpInterceptor {
+        static $inject: string[];
+        private _impl;
+        private _pageViewIdHeaderKey;
+        request: (config: ng.IRequestConfig) => ng.IRequestConfig;
+        constructor(appInsights: cc.appinsights.AppInsights);
+        private _addHeaders(config);
+    }
 }
 declare namespace cc.appinsights {
+    function _defaultPageViewTelemetryInitializer($route: ng.route.IRouteService): (envelope: Microsoft.Telemetry.Envelope) => void;
 }
 declare namespace cc.appinsights {
+    function _maybeAutoRun(appInsights: cc.appinsights.AppInsights): void;
+}
+declare namespace cc.appinsights {
+    let module: ng.IModule;
 }

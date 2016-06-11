@@ -14,8 +14,17 @@
     "outFile": "./dist/angular-cc-appinsights.js",
     "declaration": true
   },
-  "exclude": [
-    "dist",
-    "node_modules"
+  "files": [
+    "src/appInsights.provider.ts",
+    "src/appInsights.service.ts",
+    "src/appInsightsConfig.ts",
+    "src/appInsightsHttpInterceptor.ts",
+    "src/defaultPageViewTelemetryInitializer.ts",
+    "src/runBlock.ts",
+    "src/appInsights.module.ts",
+    "src/globals.d.ts",
+    "typings/index.d.ts",
+    "typings-custom/ms-application-insights.d.ts",
+    "typings-custom/angular-route-typings.d.ts"
   ]
 }

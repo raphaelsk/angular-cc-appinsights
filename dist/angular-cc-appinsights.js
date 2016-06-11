@@ -3,14 +3,6 @@ var cc;
     var appinsights;
     (function (appinsights) {
         'use strict';
-        angular.module('cc-appinsights', []);
-    })(appinsights = cc.appinsights || (cc.appinsights = {}));
-})(cc || (cc = {}));
-var cc;
-(function (cc) {
-    var appinsights;
-    (function (appinsights) {
-        'use strict';
         var AppInsightsProvider = (function () {
             function AppInsightsProvider(_$provide, _$httpProvider) {
                 this._$provide = _$provide;
@@ -75,8 +67,6 @@ var cc;
             return AppInsightsProvider;
         }());
         appinsights.AppInsightsProvider = AppInsightsProvider;
-        angular.module('cc-appinsights')
-            .provider('ccAppInsights', AppInsightsProvider);
     })(appinsights = cc.appinsights || (cc.appinsights = {}));
 })(cc || (cc = {}));
 var cc;
@@ -208,8 +198,7 @@ var cc;
             _AppInsightsHttpInterceptor.$inject = ['ccAppInsights'];
             return _AppInsightsHttpInterceptor;
         }());
-        angular.module('cc-appinsights')
-            .service('_ccAppInsightsHttpInterceptor', _AppInsightsHttpInterceptor);
+        appinsights._AppInsightsHttpInterceptor = _AppInsightsHttpInterceptor;
     })(appinsights = cc.appinsights || (cc.appinsights = {}));
 })(cc || (cc = {}));
 var cc;
@@ -217,8 +206,6 @@ var cc;
     var appinsights;
     (function (appinsights) {
         'use strict';
-        angular.module('cc-appinsights')
-            .factory('_ccDefaultPageViewTelemetryInitializer', _defaultPageViewTelemetryInitializer);
         _defaultPageViewTelemetryInitializer.$inject = ['$route'];
         function _defaultPageViewTelemetryInitializer($route) {
             return setPageViewProperties;
@@ -237,6 +224,7 @@ var cc;
                 pageView.properties["routePath"] = $route.current.originalPath || "/";
             }
         }
+        appinsights._defaultPageViewTelemetryInitializer = _defaultPageViewTelemetryInitializer;
     })(appinsights = cc.appinsights || (cc.appinsights = {}));
 })(cc || (cc = {}));
 var cc;
@@ -244,13 +232,25 @@ var cc;
     var appinsights;
     (function (appinsights) {
         'use strict';
-        angular.module('cc-appinsights')
-            .run(maybeAutoRun);
-        maybeAutoRun.$inject = ['ccAppInsights'];
-        function maybeAutoRun(appInsights) {
+        _maybeAutoRun.$inject = ['ccAppInsights'];
+        function _maybeAutoRun(appInsights) {
             if (!appInsights.configOptions.autoRun)
                 return;
             appInsights.run();
         }
+        appinsights._maybeAutoRun = _maybeAutoRun;
+    })(appinsights = cc.appinsights || (cc.appinsights = {}));
+})(cc || (cc = {}));
+var cc;
+(function (cc) {
+    var appinsights;
+    (function (appinsights) {
+        'use strict';
+        appinsights.module = angular.module('cc-appinsights', []);
+        appinsights.module
+            .provider('ccAppInsights', appinsights.AppInsightsProvider)
+            .service('_ccAppInsightsHttpInterceptor', appinsights._AppInsightsHttpInterceptor)
+            .factory('_ccDefaultPageViewTelemetryInitializer', appinsights._defaultPageViewTelemetryInitializer)
+            .run(appinsights._maybeAutoRun);
     })(appinsights = cc.appinsights || (cc.appinsights = {}));
 })(cc || (cc = {}));

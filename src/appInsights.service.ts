@@ -21,7 +21,7 @@ namespace cc.appinsights {
 
         constructor(private _$rootScope: ng.IRootScopeService,
             private _$location: ng.ILocationService,
-            private _$window: CustomWindow,
+            private _$window: AugmentedWindow,
             /**
              * A reference to `AppInsightsProvider.configOptions`
              */

@@ -49,7 +49,7 @@ namespace cc.appinsights {
 
         private _decorateExceptionHandler(
             $delegate: ng.IExceptionHandlerService,
-            $window: CustomWindow) {
+            $window: AugmentedWindow) {
 
             // note: using a direct reference to appInsights SDK (ie via $window) as worried about 
             // an exception being thrown by appInsights angular service itself

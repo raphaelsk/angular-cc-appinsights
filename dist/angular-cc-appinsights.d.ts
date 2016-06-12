@@ -49,7 +49,7 @@ declare namespace cc.appinsights {
          * within an angular application.
          */
         service: Microsoft.ApplicationInsights.AppInsights;
-        constructor(_$rootScope: ng.IRootScopeService, _$location: ng.ILocationService, _$window: CustomWindow, 
+        constructor(_$rootScope: ng.IRootScopeService, _$location: ng.ILocationService, _$window: AugmentedWindow, 
             /**
              * A reference to `AppInsightsProvider.configOptions`
              */
@@ -131,4 +131,10 @@ declare namespace cc.appinsights {
 }
 declare namespace cc.appinsights {
     let module: ng.IModule;
+}
+declare namespace cc.appinsights {
+    type AugmentedWindow = ng.IWindowService & {
+        appInsights: Microsoft.ApplicationInsights.AppInsights;
+        Microsoft: typeof Microsoft;
+    };
 }

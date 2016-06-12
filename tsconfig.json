@@ -22,7 +22,7 @@
     "src/defaultPageViewTelemetryInitializer.ts",
     "src/runBlock.ts",
     "src/appInsights.module.ts",
-    "src/globals.d.ts",
+    "src/globals.ts",
     "typings/index.d.ts",
     "typings-custom/ms-application-insights.d.ts",
     "typings-custom/angular-route-typings.d.ts"

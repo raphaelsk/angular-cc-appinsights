@@ -19,12 +19,22 @@
 
 ### Installation 
 
+### From NPM
+
+```cmd
+npm install angular-cc-appinsights --save
+```
+
 #### From Source
-```
+```cmd
 > git clone https://github.com/christianacca/angular-cc-appinsights.git
-> cd angular-cc-appinsights/dist
+> cd angular-cc-appinsights
+> npm install
+> npm run tsc
+> npm run uglify
 ```
-Copy the *angular-cc-appinsights.js* or *angular-cc-appinsights.min.js* file into your project
+
+The compiled `angular-cc-appinsights` library will be in the **dist/** folder.
 
 
 ### Setup
@@ -59,14 +69,33 @@ var appInsights = init.loadAppInsights();
 * Where you declare your app module, add `cc-appinsights`:
 ```js
 angular.module('myApp', ['cc-appinsights']);
-```
+``` 
 
 * In an angular config function, configure the `ccAppInsightsProvider`:
+
+**JS**
 ```js
-angular.module('myApp').config(function(ccAppInsightsProvider) {
-	ccAppInsightsProvider.configure(); 
-});
+angular.module('myApp').config(configWithAppInsigths);
+
+configWithAppInsigths.$inject = ['ccAppInsightsProvider'];
+
+function configWithAppInsigths(appInsightsProvider) {
+	appInsightsProvider.configure(); 
+}
 ```
+**Typescript**
+```ts
+/// <reference path="path/to/angular-cc-appinsights.d.ts" />
+
+angular.module('myApp').config(configWithAppInsigths);
+
+configWithAppInsigths.$inject = ['ccAppInsightsProvider'];
+
+function configWithAppInsigths(appInsightsProvider: cc.appinsights.AppInsightsProvider) {
+    appInsightsProvider.configure();
+}
+```
+
 
 ## API Reference
 

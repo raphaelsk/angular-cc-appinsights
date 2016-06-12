@@ -19,7 +19,7 @@ declare namespace cc.appinsights {
          * Sets `configOptions` by merging the values from `defaultOptions` with the overriding values
          * from the `AppInsightsConfig` supplied.
          */
-        configure(options: AppInsightsConfig): void;
+        configure(options?: AppInsightsConfig): void;
         private _decorateExceptionHandler($delegate, $window);
         private _extend(target, ...sources);
     }

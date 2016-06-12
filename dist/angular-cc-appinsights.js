@@ -36,6 +36,7 @@ var cc;
              * from the `AppInsightsConfig` supplied.
              */
             AppInsightsProvider.prototype.configure = function (options) {
+                if (options === void 0) { options = {}; }
                 // todo: replace extend with a Object.assign (will require a polyfill for older browsers)
                 this.configOptions = this._extend(this.configOptions, this.defaultOptions, options);
                 if (this.configOptions.autoTrackExceptions) {

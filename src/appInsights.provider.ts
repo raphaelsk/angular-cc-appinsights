@@ -36,7 +36,7 @@ namespace cc.appinsights {
          * Sets `configOptions` by merging the values from `defaultOptions` with the overriding values 
          * from the `AppInsightsConfig` supplied.
          */
-        public configure(options: AppInsightsConfig) {
+        public configure(options: AppInsightsConfig = {}) {
             // todo: replace extend with a Object.assign (will require a polyfill for older browsers)
             this.configOptions = this._extend(this.configOptions, this.defaultOptions, options);
             if (this.configOptions.autoTrackExceptions) {

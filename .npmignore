@@ -1,0 +1,9 @@
+.vscode
+src
+typings
+typings-custom
+tsconfig.json
+typings.json
+tests
+karma.conf.js
+karma-test-shim.js

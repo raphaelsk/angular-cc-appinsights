@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "An AngularJS module for integrating Microsoft's Application Insights within a SPA",
   "main": "dist/angular-cc-appinsights.js",
+  "typings": "dist/angular-cc-appinsights.d.ts",
   "scripts": {
     "lite": "lite-server",
     "tsc": "node_modules/.bin/tsc",
@@ -38,5 +39,9 @@
     "typescript": "^1.9.0-dev.20160607-1.0",
     "typings": "^1.0.4",
     "uglify-js": "^2.6.2"
+  },
+  "peerDependencies": {
+    "angular": "1.x",
+    "angular-route": "1.x"
   }
 }

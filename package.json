@@ -5,13 +5,14 @@
   "main": "dist/angular-cc-appinsights.js",
   "typings": "dist/angular-cc-appinsights.d.ts",
   "scripts": {
+    "build:full": "npm run init && npm run tsc && npm run uglify",
     "lite": "lite-server",
-    "tsc": "node_modules/.bin/tsc",
-    "tsc:w": "node_modules/.bin/tsc -w",
-    "postinstall": "typings install",
+    "init": "npm run typings",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
     "start": "npm run tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "typings": "typings",
+    "typings": "typings install",
     "uglify": "uglifyjs dist/angular-cc-appinsights.js -o dist/angular-cc-appinsights.min.js --source-map dist/angular-cc-appinsights.min.js.map --compress"
   },
   "repository": {

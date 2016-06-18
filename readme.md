@@ -30,8 +30,7 @@ npm install angular-cc-appinsights --save
 > git clone https://github.com/christianacca/angular-cc-appinsights.git
 > cd angular-cc-appinsights
 > npm install
-> npm run tsc
-> npm run uglify
+> npm run build:full
 ```
 
 The compiled `angular-cc-appinsights` library will be in the **dist/** folder.

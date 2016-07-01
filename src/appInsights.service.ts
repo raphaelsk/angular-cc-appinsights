@@ -73,16 +73,23 @@ namespace cc.appinsights {
         }
 
         private _autoTrackPageViews() {
-            this._$rootScope.$on('$routeChangeStart', (evt: ng.IAngularEvent, next: ng.route.IRoute) => {
-                this._trackNewPage(evt, next);
+            this._$rootScope.$on('$stateChangeStart', (evt: ng.IAngularEvent, toState: ng.ui.IState, toParams: any, fromState: ng.ui.IState, fromParams: any) => {
+                this._trackNewPage(evt, toState);
             });
-            this._$rootScope.$on('$routeChangeSuccess', (evt: ng.IAngularEvent, current: ng.route.IRoute) => {
-                this._recordPageView(evt, current);
+            this._$rootScope.$on('$stateChangeSuccess', (evt: ng.IAngularEvent, currentState: ng.ui.IState, toParams: any, fromState: ng.ui.IState, fromParams: any) => {
+                this._recordPageView(evt, currentState);
             });
-            this._$rootScope.$on('$routeChangeError', (evt: ng.IAngularEvent, route: ng.route.IRoute) => {
-                this._recordPageView(evt, route);
+            this._$rootScope.$on('$stateChangeError', (evt: ng.IAngularEvent, toState: ng.ui.IState, toParams: any, fromState: ng.ui.IState, fromParams: any, error: any) => {
+                this._appInsights.trackTrace('Error changing state', { errorData: error} );
+                this._recordPageView(evt, toState);
                 this._appInsights.context.operation = this._previousOperation;
             });
+            this._$rootScope.$on('$stateNotFound', (evt: ng.IAngularEvent, unfoundState: ng.ui.IUnfoundState, fromState: ng.ui.IState, fromParams: any) => {
+                this._appInsights.trackTrace('Destination State Not Found', { unfoundStateData: unfoundState });
+                this._recordPageView(evt, unfoundState);
+                this._appInsights.context.operation = this._previousOperation;
+            });
+
         }
 
         private _createConditionalTelemetryInitializer(initializer: TelemetryInitializer, condition: TelemetryItemSelector): TelemetryInitializer {
@@ -102,16 +109,15 @@ namespace cc.appinsights {
                 envelope.data.baseData.dependencyKind === AI.DependencyKind.Http;
         }
 
-        private _recordPageView(evt: ng.IAngularEvent, route: ng.route.IRoute) {
+        private _recordPageView(evt: ng.IAngularEvent, state: ng.ui.IState) {
             if (this._pageInProgress == null) return;
 
             this._appInsights.stopTrackPage(this._pageInProgress.name, this._pageInProgress.url);
         }
 
-        private _trackNewPage(evt: ng.IAngularEvent, route: ng.route.IRoute) {
-            // tried to navigate to a route that does not exist, requires url normalization, 
-            // or is null as a result of an error; either way a route change shouldn't be recorded
-            if (!route || route.redirectTo != null) {
+        private _trackNewPage(evt: ng.IAngularEvent, state: ng.ui.IState) {
+            // tried to navigate to a null state 
+            if (!state) {
                 this._pageInProgress = null;
                 return;
             }

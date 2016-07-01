@@ -4,6 +4,7 @@
   "globalDependencies": {
     "angular": "registry:dt/angular#1.5.0+20160602160139",
     "angular-route": "registry:dt/angular-route#1.3.0+20160317120654",
+    "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160521151413",
     "applicationinsights-js": "registry:dt/applicationinsights-js#0.22.14+20160606151016",
     "jquery": "registry:dt/jquery#1.10.0+20160417213236"
   }

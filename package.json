@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/christianacca/angular-cc-appinsights.git"
+    "url": "https://github.com/raphaelsk/angular-cc-appinsights.git"
   },
   "keywords": [
     "angularjs",
@@ -28,12 +28,12 @@
     "request monitoring",
     "exception monitoring"
   ],
-  "author": "christianacca",
+  "author": "raphaelsk",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/christianacca/angular-cc-appinsights/issues"
+    "url": "https://github.com/raphaelsk/angular-cc-appinsights/issues"
   },
-  "homepage": "https://github.com/christianacca/angular-cc-appinsights#readme",
+  "homepage": "https://github.com/raphaelsk/angular-cc-appinsights#readme",
   "devDependencies": {
     "concurrently": "^2.1.0",
     "lite-server": "^2.2.0",
@@ -43,6 +43,6 @@
   },
   "peerDependencies": {
     "angular": "1.x",
-    "angular-route": "1.x"
+    "angular-ui-router": "1.x"
   }
 }

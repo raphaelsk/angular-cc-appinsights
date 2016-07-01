@@ -1,6 +1,6 @@
 {
   "name": "angular-cc-appinsights",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "An AngularJS module for integrating Microsoft's Application Insights within a SPA",
   "main": "dist/angular-cc-appinsights.js",
   "typings": "dist/angular-cc-appinsights.d.ts",

@@ -1,13 +1,13 @@
 namespace cc.appinsights {
     'use strict';
 
-    _defaultPageViewTelemetryInitializer.$inject = ['$route'];
+    _defaultPageViewTelemetryInitializer.$inject = ['$state'];
 
-    export function _defaultPageViewTelemetryInitializer($route: ng.route.IRouteService): TelemetryInitializer {
+    export function _defaultPageViewTelemetryInitializer($state: ng.ui.IStateService): TelemetryInitializer {
 
         return setPageViewProperties;
 
-        function parseControllerName(name?: string|angular.route.InlineAnnotatedFunction) {
+        function parseControllerName(name?: string|any) {
             if (typeof name !== "string") {
                 return null;
             }
@@ -15,12 +15,12 @@ namespace cc.appinsights {
         }
 
         function setPageViewProperties(envelope: Microsoft.Telemetry.Envelope) {
-            if (!$route.current) return true;
+            if (!$state.current) return true;
 
             var pageView = envelope.data.baseData;
             pageView.properties = pageView.properties || {};
-            pageView.properties["controller"] = parseControllerName($route.current.controller);
-            pageView.properties["routePath"] = $route.current.originalPath || "/";
+            pageView.properties["controller"] = parseControllerName($state.current.controller);
+            pageView.properties["routePath"] = $state.current.url || "/";
 
             return true;
         }

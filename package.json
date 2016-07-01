@@ -43,6 +43,6 @@
   },
   "peerDependencies": {
     "angular": "1.x",
-    "angular-ui-router": "1.x"
+    "angular-ui-router": "0.3.x"
   }
 }
